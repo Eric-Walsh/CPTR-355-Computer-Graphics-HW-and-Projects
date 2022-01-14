@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Eric Walsh HW 3</title>
+        
+        <script>
+            var canvas;
+            var ctx;
+            let axisNum = ["-200","-100"," ","100","200"];
+            let axisBar = [0,50,100,150,200,250,300,350,400,450,500];
+
+            
+            function graph(){
+                //line style
+                ctx.strokeStyle = "grey";
+                ctx.fillStyle = "grey";
+                ctx.lineWidth = 1;
+
+                //graph
+                ctx.beginPath();
+
+                //axies
+                ctx.moveTo(0,250);
+                ctx.lineTo(500,250);
+                ctx.moveTo(250,0);
+                ctx.lineTo(250,500);
+
+                //number markers
+                //x axis
+                for(let i = 0; i < axisBar.length; i++){
+                    let x = i * 50;
+                    if(axisBar[i] != 250){
+                        ctx.moveTo(axisBar[i],255);
+                        ctx.lineTo(axisBar[i],245);
+                    }
+                }
+
+                //y axis
+                for(let i = 0; i < axisBar.length; i++){
+                    let y = i * 50;
+                    if(axisBar[i] != 250){
+                        ctx.moveTo(255,axisBar[i]);
+                        ctx.lineTo(245,axisBar[i]);
+                    }
+                }
+
+                ctx.closePath();
+                ctx.stroke();
+
+                //labels
+                for(let i = 0; i < axisNum.length; i++){
+                    //x axis
+                    ctx.fillText(axisNum[i], axisBar[2*i+1]+5, 240);
+                    //y axis
+                    ctx.fillText(axisNum[i], 260, 500 - (axisBar[2*i+1]));
+                }
+            }
+
+            function draw(){
+                //Line width
+                ctx.lineWidth = 1;
+
+                //Walls
+                ctx.fillStyle = "red";
+                ctx.fillRect(0,0,40,40);
+
+                //Door
+                ctx.fillStyle = "rgb(0,250,0)";
+                ctx.fillRect(5,0,10,15);
+
+                //Roof
+                ctx.fillStyle = "blue";
+                ctx.beginPath();
+                ctx.moveTo(0,40);
+                ctx.lineTo(40,40);
+                ctx.lineTo(20,60);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            function transform(){
+                //Transformations
+                ctx.getTransform();
+                ctx.translate(250,360);
+                ctx.rotate(-5.5);
+                draw();
+                ctx.setTransform();
+            }
+            
+            function init(){
+                canvas = document.getElementById("HW-3");
+                ctx = canvas.getContext("2d");
+                graph();
+                transform();
+            }
+            
+
+        </script>
+    </head>
+    <body onload="init()">
+        <canvas id="HW-3" width="500" height="500"></canvas>
+    </body>
+</html>
