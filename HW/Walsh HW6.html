@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <title> Eric Walsh HW 6</title>
+        <script src="https://jgfoster.github.io/GraphicsBook/2020/web-site/source/glsim/glsim.js"></script>
+        <script>
+            var canvas;
+            var ctx;
+            let sun = [1, 1, 0.8, 1];
+            let mat = [1,1,1,1];
+            let position = [2,3,2,0]; 
+
+            //draw sphere
+            function sphere(r,slices,stacks){
+                let rho0 = 0;
+                let rho1 = 0;
+                let theta = 0;
+                let x0 = 0;
+                let y0 = 0;
+                let x1 = 0;
+                let y1 = 0;
+                let z = 0;
+                
+
+                glBegin(GL_TRIANGLE_FAN);
+                for(i = 0; i < stacks; i++){
+                    rho0 = 3.14159 * (i-1)/stacks;
+                    rho1 = 3.14159 * i/stacks;
+                    z0 = r * Math.cos(rho0);
+                    z1 = r * Math.cos(rho1);
+                    for(j = 0; j < slices; j++){
+                        theta = 6.2832 * (j/slices);
+                        x0 = r * Math.cos(theta) * Math.sin(rho0); //first point in the triangle
+                        y0 = r * Math.sin(theta) * Math.sin(rho0);
+                        x1 = r * Math.cos(theta) * Math.sin(rho1); //second point int the triangle
+                        y1 = r * Math.sin(theta) * Math.sin(rho1);
+                        
+                        glNormal3f(x0/r,y0/r,z0);
+                        glVertex3f(x0,y0,z0);
+                        glNormal3f(x1/r,y1/r,z1);
+                        glVertex3f(x1,y1,z1);
+                    }
+                }
+                glEnd();
+            }
+
+            function square(r,g,b) {
+                glColor3f(r,g,b);
+                glBegin(GL_TRIANGLE_FAN);
+                glNormal3f(0,1,0);
+                glVertex3f(-5, -5, 0.5);
+                glVertex3f(5, -5, 0.5);
+                glVertex3f(5, 5, 0.5);
+                glVertex3f(-5, 5, 0.5);
+                glEnd();
+            }
+
+            function initGL() {
+                glClearColor(0, 0, 0, 1); 
+                glEnable(GL_DEPTH_TEST); 
+                glEnable(GL_LIGHTING);
+                glEnable(GL_COLOR_MATERIAL);
+                glEnable(GL_LIGHT1);
+                glEnable(GL_NORMALIZE);
+                glMatrixMode(GL_PROJECTION);  
+                glLoadIdentity();             
+                glOrtho(-5, 5, -5, 5, -10, 10);
+            }
+
+            function display() {
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            
+                glMatrixMode(GL_MODELVIEW);
+                glLoadIdentity();
+                glColor3f(1,1,1);
+                glRotatef(1,1,0,0); 
+                
+                
+                //Light
+                glLightfv(GL_LIGHT1, GL_SPECULAR, sun);
+                sun = [0.6,0.6,0.6,1]; 
+                glLightfv(GL_LIGHT1, GL_DIFFUSE, sun);
+                glLightfv(GL_LIGHT1, GL_POSITION, position);
+                sun = [0.3,0.3,0.3,1];
+                glLightfv(GL_LIGHT1, GL_AMBIENT, sun);
+                
+                //Ground
+                glPushMatrix();
+                glRotatef(90, 1, 0, 0);
+                square(1,1,1);
+                glPopMatrix();
+
+                //Material
+                glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 10);
+                glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, mat);
+                glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat);
+                
+                //Big Snowball
+                glPushMatrix();
+                glTranslatef(0,0.25,0);
+                sphere(0.75, 64,64);
+                glPopMatrix();
+
+                //Middle Snowball
+                glPushMatrix();
+                glTranslatef(0,1.5,0);
+                sphere(0.5, 64,64);
+                glPopMatrix();
+
+                //Small Snowball
+                glPushMatrix();
+                glTranslatef(0,2.25,0);
+                sphere(0.25, 64,64);
+                glPopMatrix();
+
+                //Sun
+                glPushMatrix();
+                sun = [1,1,0,1];
+                glColor3f(1,1,0);
+                glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, sun);
+                glTranslatef(2,3,2);
+                sphere(0.1, 64,64);
+                glPopMatrix();
+            }
+
+            function init(){
+                try {
+                    glsimUse("HW-6");
+                }
+                catch (e) {
+                    document.getElementById("canvas-holder").innerHTML =
+                    "Sorry, an error occured:<br>" + e;
+                    return;
+                }
+                initGL();
+                display();
+                
+            }
+        </script>
+    </header>
+    <body onload="init()">
+        <canvas id="HW-6" width="500" height="500"></canvas>
+    </body>
+</html>
