@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Eric Walsh HW 9</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+            display: block;
+            overflow: hidden;
+        }
+        
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+    <script src="https://preview.babylonjs.com/babylon.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script>
+        
+
+        var canvas = null;
+        var engine = null;
+
+        function createScene() {
+            let scene, camera, light;
+            let wing1, wing2, plane, thruster1, thruster2, thruster3, thruster4, ground;
+            var groundMat, mat1, mat2, mat3, mat4, mat5;
+            var cameraType = false;
+
+            function setupScene() {
+                scene = new BABYLON.Scene(engine);
+                scene.clearColor = new BABYLON.Color3(.5, .5, .5);
+            }
+
+            function setupCamera() {
+                if(cameraType){
+                    camera = new BABYLON.ArcRotateCamera(
+                    "Camera", -75 / 180 * Math.PI, // from X to Z
+                    +75 / 180 * Math.PI, // from Y to X
+                    15, // distance
+                    new BABYLON.Vector3(0, 0, 0), // direction
+                    scene
+                );
+                } else {
+                    camera = new BABYLON.UniversalCamera(
+                    "UniversalCamera",
+                    new BABYLON.Vector3(0, 0.5, -4.5),
+                    scene
+                    );
+                }
+                camera.attachControl(canvas, true);
+            }
+
+            function setupLights() {
+                light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
+                light.intensity = 0.7;
+
+                var pl = new BABYLON.PointLight("pl", BABYLON.Vector3.Zero(), scene);
+                pl.diffuse = new BABYLON.Color3(1, 1, 1);
+                pl.specular = new BABYLON.Color3(1, 1, 1);
+                pl.intensity = 0.8;
+            }
+
+            function setupMaterials() {
+                groundMat = new BABYLON.StandardMaterial("tile", scene);
+                groundMat.diffuseTexture = new BABYLON.Texture("https://images.pexels.com/photos/691710/pexels-photo-691710.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", scene);
+                groundMat.diffuseTexture.hasAlpha = true;
+
+
+                mat1 = new BABYLON.StandardMaterial("marble", scene);
+                mat1.diffuseTexture = new BABYLON.Texture("https://images.pexels.com/photos/3220757/pexels-photo-3220757.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260", scene);
+                mat1.diffuseTexture.hasAlpha = true;
+                mat1.backFaceCulling = true;
+
+                mat2 = new BABYLON.StandardMaterial("artistic gradient", scene);
+                mat2.diffuseTexture = new BABYLON.Texture("https://images.pexels.com/photos/1170576/pexels-photo-1170576.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260", scene);
+                mat2.diffuseTexture.hasAlpha = true;
+                mat2.backFaceCulling = true;
+
+                mat3 = new BABYLON.StandardMaterial("artistic pattern", scene);
+                mat3.diffuseTexture = new BABYLON.Texture("https://images.pexels.com/photos/1029624/pexels-photo-1029624.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260", scene);
+                mat3.diffuseTexture.hasAlpha = true;
+                mat3.backFaceCulling = true;
+
+                mat4 = new BABYLON.StandardMaterial("flowers", scene);
+                mat4.diffuseTexture = new BABYLON.Texture("https://images.pexels.com/photos/4622976/pexels-photo-4622976.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", scene);
+                mat4.diffuseTexture.hasAlpha = true;
+                mat4.backFaceCulling = true;
+
+                mat5 = new BABYLON.StandardMaterial("foliage", scene);
+                mat5.diffuseTexture = new BABYLON.Texture("https://images.pexels.com/photos/3571563/pexels-photo-3571563.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", scene);
+                mat5.diffuseTexture.hasAlpha = true;
+                mat5.backFaceCulling = true;
+
+            }
+
+            function setupGround() {
+                ground = BABYLON.MeshBuilder.CreateGround("ground", {
+                    width: 10,
+                    height: 10
+                }, scene);
+                ground.material = groundMat;
+            }
+
+            function createWings() {
+                wing1 = BABYLON.MeshBuilder.CreateBox("box", {
+                    height: 0.025,
+                    depth: 2.5
+                });
+                wing2 = BABYLON.MeshBuilder.CreateBox("box", {
+                    height: 0.025,
+                    depth: 2.5
+                });
+
+                wing1.material = mat2;
+                wing2.material = mat2;
+
+                wing2.scaling = new BABYLON.Vector3(0.25, 0.5, 0.25);
+                wing2.position.addInPlace(new BABYLON.Vector3(-0.5, 0.2, 0));
+                wing2.rotation = new BABYLON.Vector3(1, 1.57, 1.57);
+            }
+
+            function createEngine() {
+                thruster1 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {});
+                thruster2 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {});
+                thruster3 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {});
+                thruster4 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {});
+
+                thruster1.material = mat3;
+                thruster2.material = mat3;
+                thruster3.material = mat3;
+                thruster4.material = mat3;
+
+                thruster1.scaling = new BABYLON.Vector3(0.25, 0.5, 0.25);
+                thruster1.position.addInPlace(new BABYLON.Vector3(0, -0.12, 0.95));
+                thruster1.rotation = new BABYLON.Vector3(0, 0, 1.57);
+
+                thruster2.scaling = new BABYLON.Vector3(0.25, 0.5, 0.25);
+                thruster2.position.addInPlace(new BABYLON.Vector3(0, -0.12, 0.45));
+                thruster2.rotation = new BABYLON.Vector3(0, 0, 1.57);
+                thruster3.scaling = new BABYLON.Vector3(0.25, 0.5, 0.25);
+                thruster3.position.addInPlace(new BABYLON.Vector3(0, -0.12, -0.45));
+                thruster3.rotation = new BABYLON.Vector3(0, 0, 1.57);
+
+                thruster4.scaling = new BABYLON.Vector3(0.25, 0.5, 0.25);
+                thruster4.position.addInPlace(new BABYLON.Vector3(0, -0.12, -0.95));
+                thruster4.rotation = new BABYLON.Vector3(0, 0, 1.57);
+            }
+
+            function createBody() {
+                //Plane Body
+                plane = BABYLON.MeshBuilder.CreateSphere("sphere", {
+                    diameterX: 2,
+                    diameterY: 0.5,
+                    diameterZ: 0.5
+                });
+
+                plane.material = mat1;
+
+                createWings();
+                wing1.parent = plane;
+                wing2.parent = plane;
+
+                createEngine();
+                thruster1.parent = plane;
+                thruster2.parent = plane;
+                thruster3.parent = plane;
+                thruster4.parent = plane;
+            }
+
+            function createCylinder(x , y, z){
+                var shape = BABYLON.MeshBuilder.CreateCylinder("cylinder", {});
+                shape.material = mat4;
+                shape.position = new BABYLON.Vector3(x, y, z);
+                shape.scaling = new BABYLON.Vector3(0.5, 0.5, 0.5);
+                return shape;
+            }
+
+            function createCube(x, y, z){
+                var shape = BABYLON.MeshBuilder.CreateBox("box",{}, scene);
+                shape.material = mat5;
+                shape.position = new BABYLON.Vector3(x, y, z);
+                shape.scaling = new BABYLON.Vector3(0.5, 0.5, 0.5);
+                return shape;
+            }
+
+            //random number between two values (exclive of the higher value) credit to Mozilla
+            function getRandomArbitrary() {
+                let max = 5;
+                let min = 0.5;
+                return  Math.pow(-1, Math.floor(Math.random() * 2 + 1)) * Math.random() * (max - min) + min;
+            }
+
+            setupScene();
+            setupCamera();
+            setupLights();
+            setupMaterials();
+            setupGround();
+
+            //this is an artistic, abstract (kindof) plane
+            createBody();
+            plane.position.addInPlace(new BABYLON.Vector3(0, 0.25, 0));
+
+            //various scene objects that move every reload
+            let cylinder1 = createCylinder(getRandomArbitrary(), 0.5, getRandomArbitrary());
+            let cylinder2 = createCylinder(getRandomArbitrary(), 0.5, getRandomArbitrary());
+            let cylinder3 = createCylinder(getRandomArbitrary(), 0.5, getRandomArbitrary());
+            let cube1 = createCube(getRandomArbitrary(), 0.25, getRandomArbitrary());
+            let cube2 = createCube(getRandomArbitrary(), 0.25, getRandomArbitrary());
+            let cube3 = createCube(getRandomArbitrary(), 0.25, getRandomArbitrary());
+
+            return scene;
+        };
+
+
+        function init() {
+            canvas = document.getElementById("HW-9");
+            engine = new BABYLON.Engine(
+                canvas,
+                true, {
+                    preserveDrawingBuffer: true,
+                    stencil: true,
+                    disableWebGL2Support: false
+                }
+            );
+            let scene = createScene();
+            // Register a render loop to repeatedly render the scene
+            engine.runRenderLoop(function() {
+                scene.render();
+            });
+            // Watch for browser/canvas resize events
+            window.addEventListener('resize', function() {
+                engine.resize();
+            });
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <canvas id="HW-9"></canvas>
+</body>
+
+</html>
