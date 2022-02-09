@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Eric Walsh HW 9</title>
+    <title>Eric Walsh HW 10</title>
     <style>
         html,
         body {
@@ -31,9 +31,19 @@
 
         function createScene() {
             let scene, camera, light;
-            let wing1, wing2, plane, thruster1, thruster2, thruster3, thruster4, ground;
+            let wing1, wing2, plane, thruster1, thruster2, thruster3, thruster4, ground, thrust1, thrust2, thrust3, thrust4;
             var groundMat, mat1, mat2, mat3, mat4, mat5;
+            var yRotate = 0;
             var cameraType = true;
+            const shapeArray = [];
+            const shapeFlag = []; //twice the size of shapeArray. even index is the x flag and the odd index is the z flag
+
+            //random number between two values (excluve of the higher value) credit to Mozilla
+            function getRandomArbitrary() {
+                let max = 5;
+                let min = 0.5;
+                return  Math.pow(-1, Math.floor(Math.random() * 2 + 1)) * Math.random() * (max - min) + min;
+            }
 
             function setupScene() {
                 scene = new BABYLON.Scene(engine);
@@ -100,6 +110,11 @@
                 mat5.diffuseTexture.hasAlpha = true;
                 mat5.backFaceCulling = true;
 
+                mat6 = new BABYLON.StandardMaterial("thrust", scene);
+                mat6.diffuseTexture = new BABYLON.Texture("https://images.pexels.com/photos/1749/fire-orange-emergency-burning.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", scene);
+                mat6.diffuseTexture.hasAlpha = true;
+                mat6.backFaceCulling = true;
+
             }
 
             function setupGround() {
@@ -110,6 +125,7 @@
                 ground.material = groundMat;
             }
 
+            //makes the wings
             function createWings() {
                 wing1 = BABYLON.MeshBuilder.CreateBox("box", {
                     height: 0.025,
@@ -128,6 +144,7 @@
                 wing2.rotation = new BABYLON.Vector3(1, 1.57, 1.57);
             }
 
+            //makes the engine
             function createEngine() {
                 thruster1 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {});
                 thruster2 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {});
@@ -146,6 +163,7 @@
                 thruster2.scaling = new BABYLON.Vector3(0.25, 0.5, 0.25);
                 thruster2.position.addInPlace(new BABYLON.Vector3(0, -0.12, 0.45));
                 thruster2.rotation = new BABYLON.Vector3(0, 0, 1.57);
+
                 thruster3.scaling = new BABYLON.Vector3(0.25, 0.5, 0.25);
                 thruster3.position.addInPlace(new BABYLON.Vector3(0, -0.12, -0.45));
                 thruster3.rotation = new BABYLON.Vector3(0, 0, 1.57);
@@ -153,8 +171,35 @@
                 thruster4.scaling = new BABYLON.Vector3(0.25, 0.5, 0.25);
                 thruster4.position.addInPlace(new BABYLON.Vector3(0, -0.12, -0.95));
                 thruster4.rotation = new BABYLON.Vector3(0, 0, 1.57);
+
+                //flame effects (fire means it go faster)
+                thrust1 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {diameterTop: 0});
+                thrust1.material = mat6;
+                thrust2 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {diameterTop: 0});
+                thrust2.material = mat6;
+                thrust3 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {diameterTop: 0});
+                thrust3.material = mat6;
+                thrust4 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {diameterTop: 0});
+                thrust4.material = mat6;
+
+                thrust1.scaling = new BABYLON.Vector3(0.25, 0.5, 0.25);
+                thrust1.position.addInPlace(new BABYLON.Vector3(-1, -0.12, 0.95));
+                thrust1.rotation = new BABYLON.Vector3(0, 0, 1.57);
+
+                thrust2.scaling = new BABYLON.Vector3(0.25, 0.5, 0.25);
+                thrust2.position.addInPlace(new BABYLON.Vector3(-1, -0.12, 0.45));
+                thrust2.rotation = new BABYLON.Vector3(0, 0, 1.57);
+
+                thrust3.scaling = new BABYLON.Vector3(0.25, 0.5, 0.25);
+                thrust3.position.addInPlace(new BABYLON.Vector3(-1, -0.12, -0.45));
+                thrust3.rotation = new BABYLON.Vector3(0, 0, 1.57);
+                
+                thrust4.scaling = new BABYLON.Vector3(0.25, 0.5, 0.25);
+                thrust4.position.addInPlace(new BABYLON.Vector3(-1, -0.12, -0.95));
+                thrust4.rotation = new BABYLON.Vector3(0, 0, 1.57);
             }
 
+            //makes the plane body
             function createBody() {
                 //Plane Body
                 plane = BABYLON.MeshBuilder.CreateSphere("sphere", {
@@ -174,8 +219,14 @@
                 thruster2.parent = plane;
                 thruster3.parent = plane;
                 thruster4.parent = plane;
+
+                thrust1.parent = plane;
+                thrust2.parent = plane;
+                thrust3.parent = plane;
+                thrust4.parent = plane;
             }
 
+            //makes a cylinder at a given coordinates
             function createCylinder(x , y, z){
                 var shape = BABYLON.MeshBuilder.CreateCylinder("cylinder", {});
                 shape.material = mat4;
@@ -184,6 +235,7 @@
                 return shape;
             }
 
+            //makes a cube at a given coordinates
             function createCube(x, y, z){
                 var shape = BABYLON.MeshBuilder.CreateBox("box",{}, scene);
                 shape.material = mat5;
@@ -192,37 +244,152 @@
                 return shape;
             }
 
-            //random number between two values (exclive of the higher value) credit to Mozilla
-            function getRandomArbitrary() {
-                let max = 5;
-                let min = 0.5;
-                return  Math.pow(-1, Math.floor(Math.random() * 2 + 1)) * Math.random() * (max - min) + min;
+            function sceneBuild(){
+                setupScene();
+                setupCamera();
+                setupLights();
+                setupMaterials();
+                setupGround();
+
+                //this is an artistic, abstract (kindof) plane
+                createBody();
+                plane.position.addInPlace(new BABYLON.Vector3(0, 0.25, 0));
+
+                //various scene objects that are randomly placed every load
+                shapeArray.push(createCylinder(getRandomArbitrary(), 0.5, getRandomArbitrary()));
+                shapeFlag.push(false); // x flag
+                shapeFlag.push(false); // z flag
+                shapeArray.push(createCylinder(getRandomArbitrary(), 0.5, getRandomArbitrary()));
+                shapeFlag.push(false); 
+                shapeFlag.push(false);
+                shapeArray.push(createCylinder(getRandomArbitrary(), 0.5, getRandomArbitrary()));
+                shapeFlag.push(false);
+                shapeFlag.push(false);
+                shapeArray.push(createCube(getRandomArbitrary(), 0.5, getRandomArbitrary()));
+                shapeFlag.push(false);
+                shapeFlag.push(false);
+                shapeArray.push(createCube(getRandomArbitrary(), 0.5, getRandomArbitrary()));
+                shapeFlag.push(false);
+                shapeFlag.push(false);
+                shapeArray.push(createCube(getRandomArbitrary(), 0.5, getRandomArbitrary()));
+                shapeFlag.push(false);
+                shapeFlag.push(false);
+            }
+            
+            //secondary animation to be used for the registerBeforeRender() function
+            function secAnimation(){
+
+                //rotates the thruster fire
+                yRotate += 0.25;
+                thrust1.addRotation(0, yRotate, 0);
+                thrust2.addRotation(0, yRotate*2, 0);
+                thrust3.addRotation(0, yRotate*3, 0);
+                thrust4.addRotation(0, yRotate*4, 0);
+
+                //this loop controls shape movement
+                for(let i = 0, j = 0; i < 6; i++ , j+2){
+                    if(shapeArray[i].position.x >= 5 || shapeArray[i].position.x <= -5){
+                        shapeFlag[j] = !shapeFlag[j];
+                    }
+                    if(shapeArray[i].position.z >= 5 || shapeArray[i].position.z <= -5){
+                        shapeFlag[j+1] = !shapeFlag[j+1];
+                    }
+
+                    //I honestly dont know why I did this. It doesnt even work properly
+
+                    //These determine the diection of movement
+                    if(shapeFlag[j]){
+                        shapeArray[i].position.x += 0.005 * getRandomArbitrary();
+                    } else {
+                        shapeArray[i].position.x -= 0.005 * getRandomArbitrary();
+                    }
+
+                    if(shapeFlag[j+1]){
+                        shapeArray[i].position.z += 0.005 * getRandomArbitrary();
+                    } else {
+                        shapeArray[i].position.z -= 0.005 * getRandomArbitrary();
+                    }
+                    
+                }
+            }
+     
+            //primary plane take off animation using the new Babylon.animation() function
+            function createAnimation(){
+                const fRate = 10;
+                const xTakeOff = new BABYLON.Animation("xTakeOff", "position.x", fRate, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+                const yTakeOff = new BABYLON.Animation("yTakeOff", "position.y", fRate, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+                const rTakeOff = new BABYLON.Animation("rTakeOff", "rotation.z", fRate, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+                const xKeyFrames = [];
+                const yKeyFrames = [];
+                const rKeyFrames = [];
+
+
+                //secondary animations
+                scene.registerBeforeRender( function (){
+                    secAnimation();
+                });
+
+                //take off function
+                xKeyFrames.push({
+                    frame: 0,
+                    value: 2
+                })
+
+                xKeyFrames.push({
+                    frame: fRate,
+                    value: 4
+                })
+
+                xKeyFrames.push({
+                    frame: 2*fRate,
+                    value: 6
+                })
+
+                yKeyFrames.push({
+                    frame: 0,
+                    value: 0.5
+                })
+
+                yKeyFrames.push({
+                    frame: fRate,
+                    value: 2
+                })
+
+                yKeyFrames.push({
+                    frame: 2*fRate,
+                    value: 5
+                })
+
+                rKeyFrames.push({
+                    frame: 0,
+                    value: 0.1
+                })
+
+                rKeyFrames.push({
+                    frame: fRate,
+                    value: 0.5
+                })
+
+                rKeyFrames.push({
+                    frame: 2*fRate,
+                    value: 0.75
+                })
+
+               xTakeOff.setKeys(xKeyFrames);
+               yTakeOff.setKeys(yKeyFrames);
+               rTakeOff.setKeys(rKeyFrames);
+
+               scene.beginDirectAnimation(plane, [xTakeOff, yTakeOff, rTakeOff], 0, 2 * fRate, true);
             }
 
-            setupScene();
-            setupCamera();
-            setupLights();
-            setupMaterials();
-            setupGround();
-
-            //this is an artistic, abstract (kindof) plane
-            createBody();
-            plane.position.addInPlace(new BABYLON.Vector3(0, 0.25, 0));
-
-            //various scene objects that move every reload
-            let cylinder1 = createCylinder(getRandomArbitrary(), 0.5, getRandomArbitrary());
-            let cylinder2 = createCylinder(getRandomArbitrary(), 0.5, getRandomArbitrary());
-            let cylinder3 = createCylinder(getRandomArbitrary(), 0.5, getRandomArbitrary());
-            let cube1 = createCube(getRandomArbitrary(), 0.25, getRandomArbitrary());
-            let cube2 = createCube(getRandomArbitrary(), 0.25, getRandomArbitrary());
-            let cube3 = createCube(getRandomArbitrary(), 0.25, getRandomArbitrary());
-
+            sceneBuild();
+            createAnimation();
             return scene;
         };
 
 
         function init() {
-            canvas = document.getElementById("HW-9");
+            canvas = document.getElementById("HW-10");
             engine = new BABYLON.Engine(
                 canvas,
                 true, {
@@ -245,7 +412,7 @@
 </head>
 
 <body onload="init()">
-    <canvas id="HW-9"></canvas>
+    <canvas id="HW-10"></canvas>
 </body>
 
 </html>
