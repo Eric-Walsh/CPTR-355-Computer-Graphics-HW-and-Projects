@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Eric Walsh HW 12</title>
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+    <script src="https://preview.babylonjs.com/babylon.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    
+    <script>
+        var canvas = null;
+        var engine = null;
+
+        function createScene() {
+            // Create a scene.
+            var scene = new BABYLON.Scene(engine);
+            var camera = new BABYLON.ArcRotateCamera(
+                "Camera", -75 / 180 * Math.PI, // from X to Z
+                +75 / 180 * Math.PI, // from Y to X
+                15, // distance
+                new BABYLON.Vector3(0, 0, 0), // direction
+                scene
+            );
+            camera.attachControl(canvas, true);
+
+            // Create a default skybox with an environment.
+            var hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("https://www.babylonjs-playground.com/textures/environment.dds", scene);
+            var currentSkybox = scene.createDefaultSkybox(hdrTexture, true);
+
+            // Append blender model to scene.
+            BABYLON.SceneLoader.Append("./", "Tornado.obj", scene, null);
+            BABYLON.OBJFileLoader.MATERIAL_LOADING_FAILS_SILENTLY = false;
+            return scene;
+        };
+
+
+        function init() {
+            canvas = document.getElementById("renderCanvas");
+            engine = new BABYLON.Engine(
+                canvas,
+                true, {
+                preserveDrawingBuffer: true,
+                stencil: true,
+                disableWebGL2Support: false
+            }
+            );
+            let scene = createScene();
+            // Register a render loop to repeatedly render the scene
+            engine.runRenderLoop(function () {
+                scene.render();
+            });
+            // Watch for browser/canvas resize events
+            window.addEventListener("resize", function () {
+                engine.resize();
+            });
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <canvas id="renderCanvas"></canvas>
+</body>
+
+</html>

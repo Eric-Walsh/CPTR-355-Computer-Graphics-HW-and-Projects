@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Tornado Country</title>
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+    <script src="https://preview.babylonjs.com/babylon.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script src="https://cdn.babylonjs.com/cannon.js"></script>
+    
+    <script>
+        var canvas = null;
+        var engine = null;
+
+        function createScene() {
+            // Create a scene.
+            var scene;
+            var camera;
+            let tornado;
+            let building = [];
+            let vehicle = [];
+            let trees = [];
+            const BuildingCoords = [new BABYLON.Vector3(-45.1,1.95,-45.1), new BABYLON.Vector3(-45.1,1.95,-35.3), new BABYLON.Vector3(-38.3,1.95,-41.78), 
+                                    new BABYLON.Vector3(-38.5,1.95,-32.7), new BABYLON.Vector3(-38.7,1.95,-20.6), new BABYLON.Vector3(-36.6,1.95,-11.56),
+                                    new BABYLON.Vector3(-42.2,1.95,-6.68), new BABYLON.Vector3(-38.1,1.95,7.45), new BABYLON.Vector3(-44.18,1.64,22.6), 
+                                    new BABYLON.Vector3(-44.56,2.1,34.22), new BABYLON.Vector3(-36.83,2.1,25.86), new BABYLON.Vector3(-26.7,2.1,14.8),
+                                    new BABYLON.Vector3(-16.76,2.1,4.45), new BABYLON.Vector3(-9.87,2.1,-1.43), new BABYLON.Vector3(-21.17,2.1,-1.54),
+                                    new BABYLON.Vector3(-11.16,2.1,-11.89), new BABYLON.Vector3(-14.36,2.1,-22.75), new BABYLON.Vector3(-23.62,2.1,-24.83),
+                                    new BABYLON.Vector3(-29.23,2.1,-19.38), new BABYLON.Vector3(-26.39,2.1,-33.8), new BABYLON.Vector3(-21.57,2.1,-38.1),
+                                    new BABYLON.Vector3(-16.53,2.1,-42.8), new BABYLON.Vector3(-9.84,2.1,-38.84), new BABYLON.Vector3(-9.9,2.1,-3.05),
+                                    new BABYLON.Vector3(-5.45,2.1,-46.3), new BABYLON.Vector3(-3.7,2.1,-39.99), new BABYLON.Vector3(-2.17,2.1,-31.36),
+                                    new BABYLON.Vector3(0.37,2.1,-23.8), new BABYLON.Vector3(3.87,2.1,-27.49), new BABYLON.Vector3(3.76,2.1,-45.38),
+                                    new BABYLON.Vector3(7.79,2.1,-39.11), new BABYLON.Vector3(9.78,2.1,-34.38), new BABYLON.Vector3(4.2,2.1,-15.15),
+                                    new BABYLON.Vector3(11.2,2.1,-23.5), new BABYLON.Vector3(15.97,2.1,-17.02), new BABYLON.Vector3(21.42,2.1,-23.86),
+                                    new BABYLON.Vector3(19.14,2.1,-31.99), new BABYLON.Vector3(14.04,2.1,-41.63), new BABYLON.Vector3(16.69,2.1,-45.438),
+                                    new BABYLON.Vector3(25.45,2.1,-41.9), new BABYLON.Vector3(32.63,2.1,-35.31), new BABYLON.Vector3(43.18,2.1,-3.17),
+                                    new BABYLON.Vector3(39.96,2.1,6.86), new BABYLON.Vector3(36.15,3.65,15.55), new BABYLON.Vector3(46.84,2.1,16.29),
+                                    new BABYLON.Vector3(48.12,2.1,28.43), new BABYLON.Vector3(46.86,2.1,40.42) , new BABYLON.Vector3(36.19,1.57,36.717),
+                                    new BABYLON.Vector3(28.49,2.1,39.92), new BABYLON.Vector3(22.29,2.1,24.87), new BABYLON.Vector3(15.16,2.1,36.26),
+                                    new BABYLON.Vector3(7.5,2.1,43.26), new BABYLON.Vector3(9.22,2.1,29.51), new BABYLON.Vector3(-0.62,2.1,32.66)];
+            const TreeCoords = [ new BABYLON.Vector3(-15.38,0.65,44.3), new BABYLON.Vector3(-9.37,2.1,36.98), new BABYLON.Vector3(-11.56,1.59,34.82),
+                                 new BABYLON.Vector3(33.75,0.28,-40.33), new BABYLON.Vector3(43.95,0.616,-48.18), new BABYLON.Vector3(48.122,0.33,-33.34),
+                                 new BABYLON.Vector3(-46.09,2.02,38.58)];
+            const CarCoords = [ new BABYLON.Vector3(-41.62,1.58,-39.37), new BABYLON.Vector3(-42.34,1.58,-19.57), new BABYLON.Vector3(-37.65,1.58,-0.19),
+                                new BABYLON.Vector3(-32.97,1.58,13.7), new BABYLON.Vector3(-38.78,1.58,22.07), new BABYLON.Vector3(-46.17,1.58,30.17),
+                                new BABYLON.Vector3(-22.28,1.58,4.23), new BABYLON.Vector3(-26.92,3.1,38.67), new BABYLON.Vector3(2.29,3.1,5.59),
+                                new BABYLON.Vector3(12.26,2.02,25.91), new BABYLON.Vector3(21.7,2.02,23.06), new BABYLON.Vector3(28.8,2.02,30.97),
+                                new BABYLON.Vector3(39.38,2.21,23.9), new BABYLON.Vector3(23.2,3.26,-29.2), new BABYLON.Vector3(16.87,2.16,-24.98),
+                                new BABYLON.Vector3(18.03,1.72,-38.24), new BABYLON.Vector3(9.54,1.72,-43.15), new BABYLON.Vector3(7.06,1.72,-23.95),
+                                new BABYLON.Vector3(-5.76,1.72,-11.52), new BABYLON.Vector3(-20.78,1.72,2.99), new BABYLON.Vector3(-6.22,1.72,-33.48)];                        
+            var ground;
+            var groundMat;
+            var startingPoint, currentMesh;
+            var sunShadows, zapShadows;
+            var zapSprite1, zapSprite2, zapSprite3;
+            var directional, spot;
+
+            function getRanNum(min, max) {
+                return  Math.pow(-1, Math.floor(Math.random() * 2 + 1)) * Math.random() * (max - min) + min;
+            }
+
+            function sceneSetup(){
+                //scene
+                scene = new BABYLON.Scene(engine);
+                scene.enablePhysics();
+
+                //camera
+                camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 100, BABYLON.Vector3.Zero(), scene);
+                camera.lowerBetaLimit = 0.1;
+                camera.upperBetaLimit = (Math.PI / 2) * 0.9;
+                camera.lowerRadiusLimit = 30;
+                camera.upperRadiusLimit = 150;
+                camera.attachControl(canvas, true);
+
+                //light
+                spot = new BABYLON.PointLight("spot", new BABYLON.Vector3(0, 30, 10), scene);
+                directional = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, 1.5), scene);
+                directional.intensity = 1;
+                spot.diffuse = new BABYLON.Color3(1, 1, 1);
+                spot.specular = new BABYLON.Color3(0, 0, 0);
+                spot.intensity = 0;
+            }
+
+            function materials(){
+                groundMat = new BABYLON.StandardMaterial("ground", scene);
+                groundMat.diffuseTexture = new BABYLON.Texture("groundmap.jpg", scene); 
+            }
+
+            function createGround(){
+                ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "Project heightmap 2.png", 100, 100, 250, 0, 3, scene, false);
+                ground.material = groundMat;
+                ground.receiveShadows = true;
+            }
+
+            function createSkyBox(){
+                // Create a default skybox with an environment.
+                var hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("https://www.babylonjs-playground.com/textures/environment.dds", scene);
+                var currentSkybox = scene.createDefaultSkybox(hdrTexture, true);
+            }
+            
+            function createShadows(){
+                sunShadows = new BABYLON.ShadowGenerator(1024, directional);
+                zapShadows = new BABYLON.ShadowGenerator(1024, spot);
+            }
+
+            function physicsEnabler(){
+                scene.enablePhysics();
+                var physicsViewer = new BABYLON.Debug.PhysicsViewer();
+                var physicsHelper = new BABYLON.PhysicsHelper(scene);
+                ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 1 }, scene);
+                for(let i = 0; i < building.length; i++){
+                    building[i].physicsImpostor = new BABYLON.PhysicsImpostor(building[i], BABYLON.PhysicsImpostor.BoxImpostor, {mass: 4, restitution: 0, friction: 2}, scene);
+                }
+                for(let i = 0; i < vehicle.length; i++){
+                    vehicle[i].physicsImpostor = new BABYLON.PhysicsImpostor(vehicle[i], BABYLON.PhysicsImpostor.BoxImpostor, {mass: 2, restitution: 0, friction: 1.4}, scene);
+                }
+                for(let i = 0; i < trees.length; i++){
+                    trees[i].physicsImpostor = new BABYLON.PhysicsImpostor(trees[i], BABYLON.PhysicsImpostor.BoxImpostor, {mass: 1.25, restitution: 0, friction: 1}, scene);
+                }
+            }
+
+            function meshImport(){
+                // Append blender model to scene
+                BABYLON.SceneLoader.ImportMesh("","./", "Tornado.obj", scene, function(newMesh){
+                    tornado = newMesh[0];
+                    tornado.position.y = 20;
+                });
+
+                //buidlings
+                let x;
+                for(let i = 0; i < buidlings.length; i++){
+                    x = getRanNum(1,3);
+                    if(x == 1){
+                        BABYLON.SceneLoader.ImportMesh("","./Models", "Tornado.obj", scene, function(newMesh){
+                            tornado = newMesh[0];
+                            tornado.position.y = 20;
+                        });
+                    }
+                }
+            }
+            
+            function placeHolderMesh(){
+                var square = BABYLON.MeshBuilder.CreateBox("box",{}, scene);
+                square.position = new BABYLON.Vector3(0, 2, 0);
+            }
+
+            function getGroundPosition(){
+                var pickinfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) { return mesh == ground; });
+                if (pickinfo.hit) {
+                    return pickinfo.pickedPoint;
+                }
+
+                return null;
+            }
+            function pointerDown(mesh){
+                currentMesh = mesh;
+                startingPoint = getGroundPosition();
+                if (startingPoint) { // we need to disconnect camera from canvas
+                    setTimeout(function () {
+                        camera.detachControl(canvas);
+                    }, 0);
+                }
+            }
+
+            function pointerUp(mesh) {
+                    if (startingPoint) {
+                    camera.attachControl(canvas, true);
+                    startingPoint = null;
+                    getCoordinates(mesh);
+                    return;
+                }
+            }
+
+            function pointerMove() {
+                if (!startingPoint) {
+                    return;
+                }
+                var current = getGroundPosition();
+                if (!current) {
+                    return;
+                }
+
+                var diff = current.subtract(startingPoint);
+                currentMesh.position.addInPlace(diff);
+
+                startingPoint = current;
+
+            }
+
+            function getCoordinates(mesh){
+                console.log(mesh.position.x);
+                console.log(mesh.position.y);
+                console.log(mesh.position.z);
+            }
+
+             function createMeshes(){
+                for(let i = 0; i < BuildingCoords.length; i++){
+                    building.push(new BABYLON.Mesh());
+                    building[i].position = BuildingCoords[i];
+                    building[i].position.y += 1;
+                    sunShadows.getShadowMap().renderList.push(building[i]);
+                    zapShadows.getShadowMap().renderList.push(building[i]);
+                }
+                for(let i = 0; i < CarCoords.length; i++){
+                    vehicle.push(new BABYLON.Mesh());
+                    vehicle[i].position = CarCoords[i];
+                    vehicle[i].position.y += 1;
+                    sunShadows.getShadowMap().renderList.push(vehicle[i]);
+                    zapShadows.getShadowMap().renderList.push(vehicle[i]);
+                }
+                for(let i = 0; i < TreeCoords.length; i++){
+                    trees.push(new BABYLON.Mesh());
+                    trees[i].position = TreeCoords[i];
+                    trees[i].position.y += 1;
+                    sunShadows.getShadowMap().renderList.push(trees[i]);
+                    zapShadows.getShadowMap().renderList.push(trees[i]);
+                }
+            }
+
+            sceneSetup();
+            materials();
+            createShadows();
+            createGround();
+            //createMeshes();
+            setTimeout(() => {createMeshes();}, 3000);
+            createSkyBox();
+            physicsEnabler();
+           // meshImport();
+           scene.onPointerObservable.add((pointerInfo) => {      		
+                switch (pointerInfo.type) {
+                    case BABYLON.PointerEventTypes.POINTERDOWN:
+                        if(pointerInfo.pickInfo.hit && (pointerInfo.pickInfo.pickedMesh != ground)) {
+                            pointerDown(pointerInfo.pickInfo.pickedMesh);
+                                
+                        }
+                        break;
+                    case BABYLON.PointerEventTypes.POINTERUP:
+                            pointerUp(pointerInfo.pickInfo.pickedMesh);
+                        break;
+                    case BABYLON.PointerEventTypes.POINTERMOVE:          
+                            pointerMove();
+                        break;
+
+                }
+            });
+            
+            return scene;
+        };
+
+
+        function init() {
+            canvas = document.getElementById("renderCanvas");
+            engine = new BABYLON.Engine(
+                canvas,
+                true, {
+                preserveDrawingBuffer: true,
+                stencil: true,
+                disableWebGL2Support: false
+            }
+            );
+            let scene = createScene();
+            // Register a render loop to repeatedly render the scene
+            engine.runRenderLoop(function () {
+                scene.render();
+            });
+            // Watch for browser/canvas resize events
+            window.addEventListener("resize", function () {
+                engine.resize();
+            });
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <canvas id="renderCanvas"></canvas>
+</body>
+
+</html>

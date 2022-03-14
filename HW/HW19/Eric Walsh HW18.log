@@ -1,0 +1,89 @@
+Exporter version: 2.93.5, Blender version: 3.0.1
+========= Conversion from Blender to Babylon.js =========
+	Scene settings used :
+		Inline textures     :  false
+		Material Type       :  PBR
+		Positions Precision :  4
+		Normals Precision   :  3
+		UVs Precision       :  3
+		Vert Color Precision:  3
+		Mat Weight Precision:  2
+		Keep Z-up r-handed  :  no
+		Texture directory   :  /Users/EricWalsh/OneDrive - Walla Walla University/Computer Science/Computer Graphics/CPTR-355/HW/
+	Python World class constructor completed
+	processing begun of mesh:  Cube
+		processing begun of material:  Material
+		num positions      :  36
+		num normals        :  36
+		num tangents       :  0
+		num uvs            :  72
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  12
+	processing begun of camera (UniversalCamera):  Camera
+	processing begun of mesh:  Sphere
+		processing begun of material:  Material.002
+		num positions      :  2756
+		num normals        :  2756
+		num tangents       :  0
+		num uvs            :  5512
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  960
+	processing begun of mesh:  Sphere.001
+		processing begun of material:  Material.001
+		num positions      :  2606
+		num normals        :  2606
+		num tangents       :  0
+		num uvs            :  5212
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  876
+	processing begun of mesh:  Sphere.002
+		processing begun of material:  Material.003
+		num positions      :  2758
+		num normals        :  2758
+		num tangents       :  0
+		num uvs            :  5516
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  960
+	processing begun of mesh:  Mesh
+		processing begun of material:  Material.004
+		num positions      :  455
+		num normals        :  455
+		num tangents       :  0
+		num uvs            :  910
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  152
+	processing begun of mesh:  Mesh.001
+		processing begun of material:  Material.005
+		num positions      :  469
+		num normals        :  469
+		num tangents       :  0
+		num uvs            :  938
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  164
+	processing begun of mesh:  Mesh.002
+		processing begun of material:  Material.006
+		num positions      :  713
+		num normals        :  713
+		num tangents       :  0
+		num uvs            :  1426
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  244
+	processing begun of light (POINT):  Light
+========= Writing of JSON file started =========
+	writing mesh:  Cube
+	writing mesh:  Sphere
+	writing mesh:  Sphere.001
+	writing mesh:  Sphere.002
+	writing mesh:  Mesh
+	writing mesh:  Mesh.001
+	writing mesh:  Mesh.002
+========= Writing of JSON file completed =========
+========= end of processing =========
+elapsed time:  0 min, 1.3117 secs

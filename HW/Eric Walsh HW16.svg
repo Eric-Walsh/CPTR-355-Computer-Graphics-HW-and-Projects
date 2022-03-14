@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (b8e25be8, 2022-02-05)"
+   sodipodi:docname="Eric Walsh HW16.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.59644835"
+     inkscape:cx="178.55695"
+     inkscape:cy="418.30948"
+     inkscape:window-width="1280"
+     inkscape:window-height="755"
+     inkscape:window-x="0"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient1162">
+      <stop
+         style="stop-color:#800000;stop-opacity:1;"
+         offset="0"
+         id="stop1158" />
+      <stop
+         style="stop-color:#ffaaaa;stop-opacity:1"
+         offset="1"
+         id="stop1160" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1162"
+       id="linearGradient1164"
+       x1="377.95312"
+       y1="188.97656"
+       x2="377.95312"
+       y2="566.92969"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#000080;stroke:#000000;stroke-width:0.264583;stroke-opacity:0.67206484"
+       id="rect1662"
+       width="188.79506"
+       height="10.144213"
+       x="-82.639702"
+       y="138.19263"
+       transform="rotate(-42.294094)" />
+    <path
+       id="path55"
+       style="fill:url(#linearGradient1164);fill-rule:evenodd;stroke-width:0.999999;fill-opacity:1;stroke:#000000;stroke-opacity:0.97570848"
+       d="M 377.95312 188.97656 A 188.97638 188.97638 0 0 0 188.97656 377.95312 A 188.97638 188.97638 0 0 0 377.95312 566.92969 A 188.97638 188.97638 0 0 0 566.92969 377.95312 A 188.97638 188.97638 0 0 0 377.95312 188.97656 z M 283.46484 283.46484 L 472.44141 283.46484 L 472.44141 472.44141 L 283.46484 472.44141 L 283.46484 283.46484 z "
+       transform="scale(0.26458333)" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="32.123341"
+       y="214.15559"
+       id="text2230"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.264583"
+         x="32.123341"
+         y="214.15559"
+         id="tspan2232">Eric Walsh CPTR 380 HW 16</tspan></text>
+    <rect
+       style="fill:#000080;stroke:#000000;stroke-width:0.136901;stroke-opacity:0.00404861"
+       id="rect1662-3"
+       width="49.969322"
+       height="10.261091"
+       x="21.129133"
+       y="137.94183"
+       transform="matrix(0.74109297,-0.67140242,0.65753309,0.75342566,0,0)" />
+  </g>
+</svg>
