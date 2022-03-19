@@ -1,0 +1,11 @@
+Model Information:
+* title:	House
+* source:	https://sketchfab.com/3d-models/house-27f1316691c940e29b2c2280616d0cda
+* author:	Grey.jnr (https://sketchfab.com/Grey.jnr)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "House" (https://sketchfab.com/3d-models/house-27f1316691c940e29b2c2280616d0cda) by Grey.jnr (https://sketchfab.com/Grey.jnr) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -23,7 +23,11 @@
     <script src="https://preview.babylonjs.com/babylon.js"></script>
     <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
     <script src="https://cdn.babylonjs.com/cannon.js"></script>
-    
+    <script src="https://preview.babylonjs.com/gui/babylon.gui.js"></script>
+
+
+
+
     <script>
         var canvas = null;
         var engine = null;
@@ -32,53 +36,93 @@
             // Create a scene.
             var scene;
             var camera;
+            //array that holds all the meshes
             let tornado;
             let building = [];
             let vehicle = [];
             let trees = [];
-            const BuildingCoords = [new BABYLON.Vector3(-45.1,1.95,-45.1), new BABYLON.Vector3(-45.1,1.95,-35.3), new BABYLON.Vector3(-38.3,1.95,-41.78), 
-                                    new BABYLON.Vector3(-38.5,1.95,-32.7), new BABYLON.Vector3(-38.7,1.95,-20.6), new BABYLON.Vector3(-36.6,1.95,-11.56),
-                                    new BABYLON.Vector3(-42.2,1.95,-6.68), new BABYLON.Vector3(-38.1,1.95,7.45), new BABYLON.Vector3(-44.18,1.64,22.6), 
-                                    new BABYLON.Vector3(-44.56,2.1,34.22), new BABYLON.Vector3(-36.83,2.1,25.86), new BABYLON.Vector3(-26.7,2.1,14.8),
-                                    new BABYLON.Vector3(-16.76,2.1,4.45), new BABYLON.Vector3(-9.87,2.1,-1.43), new BABYLON.Vector3(-21.17,2.1,-1.54),
-                                    new BABYLON.Vector3(-11.16,2.1,-11.89), new BABYLON.Vector3(-14.36,2.1,-22.75), new BABYLON.Vector3(-23.62,2.1,-24.83),
-                                    new BABYLON.Vector3(-29.23,2.1,-19.38), new BABYLON.Vector3(-26.39,2.1,-33.8), new BABYLON.Vector3(-21.57,2.1,-38.1),
-                                    new BABYLON.Vector3(-16.53,2.1,-42.8), new BABYLON.Vector3(-9.84,2.1,-38.84), new BABYLON.Vector3(-9.9,2.1,-3.05),
-                                    new BABYLON.Vector3(-5.45,2.1,-46.3), new BABYLON.Vector3(-3.7,2.1,-39.99), new BABYLON.Vector3(-2.17,2.1,-31.36),
-                                    new BABYLON.Vector3(0.37,2.1,-23.8), new BABYLON.Vector3(3.87,2.1,-27.49), new BABYLON.Vector3(3.76,2.1,-45.38),
-                                    new BABYLON.Vector3(7.79,2.1,-39.11), new BABYLON.Vector3(9.78,2.1,-34.38), new BABYLON.Vector3(4.2,2.1,-15.15),
-                                    new BABYLON.Vector3(11.2,2.1,-23.5), new BABYLON.Vector3(15.97,2.1,-17.02), new BABYLON.Vector3(21.42,2.1,-23.86),
-                                    new BABYLON.Vector3(19.14,2.1,-31.99), new BABYLON.Vector3(14.04,2.1,-41.63), new BABYLON.Vector3(16.69,2.1,-45.438),
-                                    new BABYLON.Vector3(25.45,2.1,-41.9), new BABYLON.Vector3(32.63,2.1,-35.31), new BABYLON.Vector3(43.18,2.1,-3.17),
-                                    new BABYLON.Vector3(39.96,2.1,6.86), new BABYLON.Vector3(36.15,3.65,15.55), new BABYLON.Vector3(46.84,2.1,16.29),
-                                    new BABYLON.Vector3(48.12,2.1,28.43), new BABYLON.Vector3(46.86,2.1,40.42) , new BABYLON.Vector3(36.19,1.57,36.717),
-                                    new BABYLON.Vector3(28.49,2.1,39.92), new BABYLON.Vector3(22.29,2.1,24.87), new BABYLON.Vector3(15.16,2.1,36.26),
-                                    new BABYLON.Vector3(7.5,2.1,43.26), new BABYLON.Vector3(9.22,2.1,29.51), new BABYLON.Vector3(-0.62,2.1,32.66)];
-            const TreeCoords = [ new BABYLON.Vector3(-15.38,0.65,44.3), new BABYLON.Vector3(-9.37,2.1,36.98), new BABYLON.Vector3(-11.56,1.59,34.82),
-                                 new BABYLON.Vector3(33.75,0.28,-40.33), new BABYLON.Vector3(43.95,0.616,-48.18), new BABYLON.Vector3(48.122,0.33,-33.34),
-                                 new BABYLON.Vector3(-46.09,2.02,38.58)];
-            const CarCoords = [ new BABYLON.Vector3(-41.62,1.58,-39.37), new BABYLON.Vector3(-42.34,1.58,-19.57), new BABYLON.Vector3(-37.65,1.58,-0.19),
-                                new BABYLON.Vector3(-32.97,1.58,13.7), new BABYLON.Vector3(-38.78,1.58,22.07), new BABYLON.Vector3(-46.17,1.58,30.17),
-                                new BABYLON.Vector3(-22.28,1.58,4.23), new BABYLON.Vector3(-26.92,3.1,38.67), new BABYLON.Vector3(2.29,3.1,5.59),
-                                new BABYLON.Vector3(12.26,2.02,25.91), new BABYLON.Vector3(21.7,2.02,23.06), new BABYLON.Vector3(28.8,2.02,30.97),
-                                new BABYLON.Vector3(39.38,2.21,23.9), new BABYLON.Vector3(23.2,3.26,-29.2), new BABYLON.Vector3(16.87,2.16,-24.98),
-                                new BABYLON.Vector3(18.03,1.72,-38.24), new BABYLON.Vector3(9.54,1.72,-43.15), new BABYLON.Vector3(7.06,1.72,-23.95),
-                                new BABYLON.Vector3(-5.76,1.72,-11.52), new BABYLON.Vector3(-20.78,1.72,2.99), new BABYLON.Vector3(-6.22,1.72,-33.48)];                        
+            //Arrays holding all the coordinates
+            const BuildingCoords = [new BABYLON.Vector3(-45.1, 1.95, -45.1), new BABYLON.Vector3(-38.3, 1.95, -41.78),
+            new BABYLON.Vector3(-38.5, 1.95, -32.7), new BABYLON.Vector3(-38.7, 1.95, -20.6),
+            new BABYLON.Vector3(-38.1, 1.95, 7.45), new BABYLON.Vector3(-44.18, 1.64, 22.6),
+            new BABYLON.Vector3(-44.56, 2.1, 34.22), new BABYLON.Vector3(-26.7, 2.1, 14.8),
+            new BABYLON.Vector3(-16.76, 2.1, 4.45), new BABYLON.Vector3(-9.87, 2.1, -1.43),
+            new BABYLON.Vector3(-14.36, 2.1, -22.75), new BABYLON.Vector3(-23.62, 2.1, -24.83),
+            new BABYLON.Vector3(-29.23, 2.1, -19.38), new BABYLON.Vector3(-21.57, 2.1, -38.1),
+            new BABYLON.Vector3(-16.53, 2.1, -42.8), new BABYLON.Vector3(-9.84, 2.1, -38.84),
+            new BABYLON.Vector3(-3.7, 2.1, -39.99), new BABYLON.Vector3(-2.17, 2.1, -31.36),
+            new BABYLON.Vector3(0.37, 2.1, -23.8), new BABYLON.Vector3(3.76, 2.1, -45.38),
+            new BABYLON.Vector3(9.78, 2.1, -34.38), new BABYLON.Vector3(4.2, 2.1, -15.15),
+            new BABYLON.Vector3(11.2, 2.1, -23.5), new BABYLON.Vector3(15.97, 2.1, -17.02),
+            new BABYLON.Vector3(19.14, 2.1, -31.99), new BABYLON.Vector3(16.69, 2.1, -45.438),
+            new BABYLON.Vector3(32.63, 2.1, -35.31), new BABYLON.Vector3(43.18, 2.1, -3.17),
+            new BABYLON.Vector3(39.96, 2.1, 6.86), new BABYLON.Vector3(36.15, 3.65, 15.55),
+            new BABYLON.Vector3(48.12, 2.1, 28.43), new BABYLON.Vector3(36.19, 1.57, 36.717),
+            new BABYLON.Vector3(22.29, 2.1, 24.87), new BABYLON.Vector3(15.16, 2.1, 36.26),
+            new BABYLON.Vector3(7.5, 2.1, 43.26), new BABYLON.Vector3(9.22, 2.1, 29.51)];
+            const TreeCoords = [new BABYLON.Vector3(-15.38, 0.65, 44.3), new BABYLON.Vector3(-9.37, 2.1, 36.98), new BABYLON.Vector3(-11.56, 1.59, 34.82),
+            new BABYLON.Vector3(33.75, 0.28, -40.33), new BABYLON.Vector3(43.95, 0.616, -48.18), new BABYLON.Vector3(48.122, 0.33, -33.34),
+            new BABYLON.Vector3(-46.09, 2.02, 38.58)];
+            const CarCoords = [new BABYLON.Vector3(-41.62, 1.58, -39.37), new BABYLON.Vector3(-37.65, 1.58, -0.19),
+            new BABYLON.Vector3(-32.97, 1.58, 13.7), new BABYLON.Vector3(-38.78, 1.58, 22.07),
+            new BABYLON.Vector3(-22.28, 1.58, 4.23), new BABYLON.Vector3(-26.92, 3.1, 38.67),
+            new BABYLON.Vector3(12.26, 2.02, 25.91), new BABYLON.Vector3(28.8, 2.02, 30.97),
+            new BABYLON.Vector3(23.2, 3.26, -29.2), new BABYLON.Vector3(16.87, 2.16, -24.98),
+            new BABYLON.Vector3(18.03, 1.72, -38.24), new BABYLON.Vector3(7.06, 1.72, -23.95),
+            new BABYLON.Vector3(-5.76, 1.72, -11.52), new BABYLON.Vector3(-20.78, 1.72, 2.99)];
             var ground;
-            var groundMat;
+            //materials
+            var groundMat, colliderMat, slide1, slide2, slide3, backlayer;
+            var matArray = [];
+            //event variables
             var startingPoint, currentMesh;
+            //shadows
             var sunShadows, zapShadows;
-            var zapSprite1, zapSprite2, zapSprite3;
-            var directional, spot;
+            //sprites and particles
+            var zapSprite1, zapSprite2, rainParticle1, rainParticle2;
+            var rainBox1, rainBox2;
+            //lights
+            var directional, point;
+            //line variables
+            var linePoints = [];
+            let pointFlag = false;
+            var slope;
+            //physics
+            var vortex;
+            var physicsHelper;
+            //Gui and SFX
+            let loadingFlag = false;
+            var advancedTexture;
+            var background, siren, wind, zap, click, rain, pointSFX;
+            var SFXVol = 1;
+            var musicVol = 1;
+            var MasterVol = 1;
+            var advancedTexture, grid;
+            var startBut, settingBut, slideBut, musSlider, sfxSlider, masterSlider, leftBut, rightBut, exitBut, layer;
+            var menuFlag = 0;
+            var slidePointer = 0;
+            var menuPanel, settingPanel;
+            var enableFlag = true;
+            const MaxMeshes = 7;
 
+            //Random Number generator
             function getRanNum(min, max) {
-                return  Math.pow(-1, Math.floor(Math.random() * 2 + 1)) * Math.random() * (max - min) + min;
+                return Math.random() * (max - min) + min;
             }
 
-            function sceneSetup(){
+            //Used for debugging the Vortex
+            function addMaterialToMesh(sphere) {
+                var sphereMaterial = new BABYLON.StandardMaterial("sphereMaterial", scene);
+                sphereMaterial.alpha = 0.5;
+                sphere.material = sphereMaterial;
+            }
+
+            //Sets up scene, camera, and lights
+            function sceneSetup() {
                 //scene
                 scene = new BABYLON.Scene(engine);
-                scene.enablePhysics();
+
+                scene.useRightHandedSystem = true
 
                 //camera
                 camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 100, BABYLON.Vector3.Zero(), scene);
@@ -89,177 +133,869 @@
                 camera.attachControl(canvas, true);
 
                 //light
-                spot = new BABYLON.PointLight("spot", new BABYLON.Vector3(0, 30, 10), scene);
+                point = new BABYLON.PointLight("point", new BABYLON.Vector3(0, 30, 10), scene);
                 directional = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, 1.5), scene);
                 directional.intensity = 1;
-                spot.diffuse = new BABYLON.Color3(1, 1, 1);
-                spot.specular = new BABYLON.Color3(0, 0, 0);
-                spot.intensity = 0;
+                point.diffuse = new BABYLON.Color3(1, 1, 1);
+                point.specular = new BABYLON.Color3(0, 0, 0);
+                point.intensity = 2.5;
+                point.setEnabled(false);
             }
 
-            function materials(){
+            //Loads materials
+            function materials() {
                 groundMat = new BABYLON.StandardMaterial("ground", scene);
-                groundMat.diffuseTexture = new BABYLON.Texture("groundmap.jpg", scene); 
+                groundMat.diffuseTexture = new BABYLON.Texture("groundmap.jpg", scene);
+                //backlayer = new BABYLON.Layer("", "./Slides/tornado.jpeg", scene, true);
+                //slide1 =new BABYLON.Texture("/slides/Slide1.png", scene);
+                //slide2 = new BABYLON.Texture("/slides/Slide2.png", scene);
+                //slide3 = new BABYLON.Texture("/slides/Slide3.png", scene);
+                //matArray.push(new BABYLON.Layer("","./Slides/Slide1.jpeg", scene, true));
+                //matArray.push(new BABYLON.Layer("","./Slides/Slide2.jpeg", scene, true));
+                //matArray.push(new BABYLON.Layer("","./Slides/Slide3.jpeg", scene, true));
+                colliderMat = new BABYLON.StandardMaterial("myMaterial", scene);
+                colliderMat.alpha = 0;
             }
 
-            function createGround(){
-                ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "Project heightmap 2.png", 100, 100, 250, 0, 3, scene, false);
+            //Loads the sounds
+            function createGround() {
+                ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "Project heightmap 2.png", 100, 100, 250, -1.25, 1.25, scene, false, function () {
+                    //round.ellipsoid = new BABYLON.Vector3(1,1,1);
+                    //ground.checkCollisions = true;
+                    ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
+                    console.log("Ground physics enabled");
+                });
                 ground.material = groundMat;
                 ground.receiveShadows = true;
+
+                //const trueGround = BABYLON.Mesh.CreateBox("box", {height: 500, width: 500, depth: 0.1}, scene);
+                //trueGround.material = colliderMat;
+                //trueGround.position.y = ground.position.y - 20;
             }
 
-            function createSkyBox(){
+            //Loads the SkyBox
+            function createSkyBox() {
                 // Create a default skybox with an environment.
-                var hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("https://www.babylonjs-playground.com/textures/environment.dds", scene);
+                var hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("https://www.babylonjs-playground.com/textures/country.dds", scene);
                 var currentSkybox = scene.createDefaultSkybox(hdrTexture, true);
             }
-            
-            function createShadows(){
+
+            //Loads Shadows
+            function createShadows() {
                 sunShadows = new BABYLON.ShadowGenerator(1024, directional);
-                zapShadows = new BABYLON.ShadowGenerator(1024, spot);
+                zapShadows = new BABYLON.ShadowGenerator(1024, point);
             }
 
-            function physicsEnabler(){
+            //Loads particless
+            function createParticles() {
+                rainParticle1 = new BABYLON.ParticleSystem("particles", 2000, scene);
+                rainParticle2 = new BABYLON.ParticleSystem("particles", 2000, scene);
+                rainParticle1.particleTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/rain.png", scene);
+                rainParticle2.particleTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/rain.png", scene);
+                rainBox1 = BABYLON.Mesh.CreateBox("box", scene);
+                rainBox1.material = colliderMat;
+                rainBox2 = BABYLON.Mesh.CreateBox("box", scene);
+                rainBox2.material = colliderMat;
+                rainBox1.position.y = tornado.position.y;
+                rainBox1.position.x = tornado.position.x;
+                rainBox1.position.z = tornado.position.z + 5;
+                rainBox2.position.y = tornado.position.y;
+                rainBox2.position.x = tornado.position.x;
+                rainBox2.position.z = tornado.position.z - 5;
+                rainParticle1.emitter = rainBox1;
+                rainParticle2.emitter = rainBox2;
+                rainParticle1.minSize = 0.1;
+                rainParticle1.mazSize = 0.4;
+                rainParticle2.minSize = 0.1;
+                rainParticle2.mazSize = 0.4;
+                rainParticle1.minSaleX = 0.1;
+                rainParticle1.maxScaleX = 0.15;
+                rainParticle1.minScaleY = 0.2;
+                rainParticle1.maxScaleY = 0.3;
+                rainParticle2.minSaleX = 0.1;
+                rainParticle2.maxScaleX = 0.15;
+                rainParticle2.minScaleY = 0.2;
+                rainParticle2.maxScaleY = 0.3;
+                rainParticle1.minLifeTime = 1;
+                rainParticle1.maxLifeTime = 5;
+                rainParticle2.minLifeTime = 1;
+                rainParticle2.maxLifeTime = 5;
+                rainParticle1.color1 = new BABYLON.Color4(244, 246, 247, 1);
+                rainParticle1.color2 = new BABYLON.Color4(196, 211, 223, 1);
+                rainParticle1.colorDead = new BABYLON.Color4(128, 194, 204, 0.01);
+                rainParticle2.color1 = new BABYLON.Color4(244, 246, 247, 1);
+                rainParticle2.color2 = new BABYLON.Color4(196, 211, 223, 1);
+                rainParticle2.colorDead = new BABYLON.Color4(128, 194, 204, 0.01);
+                rainParticle1.minEmitPower = 1;
+                rainParticle1.maxEmitPower = 3;
+                rainParticle2.minEmitPower = 1;
+                rainParticle2.maxEmitPower = 3;
+                rainParticle1.gravity = new BABYLON.Vector3(0, -9.81, 0);
+                rainParticle2.gravity = new BABYLON.Vector3(0, -9.81, 0);
+                rainParticle1.emitRate = 500;
+                rainParticle1.minEmitBox = new BABYLON.Vector3(15, 4, 15);
+                rainParticle1.maxEmitBox = new BABYLON.Vector3(-15, -4, -15);
+                rainParticle2.emitRate = 500;
+                rainParticle2.minEmitBox = new BABYLON.Vector3(15, 4, 15);
+                rainParticle2.maxEmitBox = new BABYLON.Vector3(-15, -4, -15);
+                //rainParticle1.isLocal = true;
+                //rainParticle2.isLocal = true;
+                console.log("particles loaded");
+            }
+
+            //Loads the lightning sprites
+            function createLightning() {
+                const zapManager = new BABYLON.SpriteManager("lightning", "./Lightning.png", 1, 350);
+                zapSprite1 = new BABYLON.Sprite("lightning", zapManager);
+                //zapSprite1.cellIndex = 1
+                zapSprite2 = new BABYLON.Sprite("lightning", zapManager);
+                //zapSprite2.cellIndex = 1
+                zapSprite1.width = 5;
+                zapSprite1.height = 20;
+                zapSprite1.isVisible = false;
+                zapSprite2.width = 5;
+                zapSprite2.height = 20;
+                zapSprite2.isVisible = false;
+                zapSprite1.position.x = 60;
+                zapSprite1.position.y = 10;
+                zapSprite2.position.x = 60;
+                zapSprite2.position.y = 10;
+                console.log("Sprites Loaded");
+            }
+
+            //Enables Physics and physics debug
+            function physicsEnabler() {
                 scene.enablePhysics();
+                scene.collisionsEnabled = true;
                 var physicsViewer = new BABYLON.Debug.PhysicsViewer();
-                var physicsHelper = new BABYLON.PhysicsHelper(scene);
-                ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 1 }, scene);
-                for(let i = 0; i < building.length; i++){
-                    building[i].physicsImpostor = new BABYLON.PhysicsImpostor(building[i], BABYLON.PhysicsImpostor.BoxImpostor, {mass: 4, restitution: 0, friction: 2}, scene);
+                physicsHelper = new BABYLON.PhysicsHelper(scene);
+                //ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground,BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0.5, restitution: 0.9 }, scene);
+                //ground.checkCollisions = true;
+            }
+
+            //Starts loading screen
+            BABYLON.DefaultLoadingScreen.prototype.displayLoadingUI = function () {
+                if (document.getElementById("customLoadingScreenDiv")) {
+                    // Do not add a loading screen if there is already one
+                    document.getElementById("customLoadingScreenDiv").style.display = "initial";
+                    return;
                 }
-                for(let i = 0; i < vehicle.length; i++){
-                    vehicle[i].physicsImpostor = new BABYLON.PhysicsImpostor(vehicle[i], BABYLON.PhysicsImpostor.BoxImpostor, {mass: 2, restitution: 0, friction: 1.4}, scene);
+                this._loadingDiv = document.createElement("div");
+                this._loadingDiv.id = "customLoadingScreenDiv";
+                this._loadingDiv.innerHTML = "Welcome to Tornado Country! \n The scene is currently loading... ";
+                var customLoadingScreenCss = document.createElement('style');
+                customLoadingScreenCss.type = 'text/css';
+                customLoadingScreenCss.innerHTML = `
+                #customLoadingScreenDiv{
+                background-color: #BB464Bcc;
+                color: white;
+                font-size:50px;
+                text-align:center;
                 }
-                for(let i = 0; i < trees.length; i++){
-                    trees[i].physicsImpostor = new BABYLON.PhysicsImpostor(trees[i], BABYLON.PhysicsImpostor.BoxImpostor, {mass: 1.25, restitution: 0, friction: 1}, scene);
+                `;
+                document.getElementsByTagName('head')[0].appendChild(customLoadingScreenCss);
+                this._resizeLoadingUI();
+                window.addEventListener("resize", this._resizeLoadingUI);
+                document.body.appendChild(this._loadingDiv);
+            };
+
+            //Ends Loading screen
+            BABYLON.DefaultLoadingScreen.prototype.hideLoadingUI = function () {
+                document.getElementById("customLoadingScreenDiv").style.display = "none";
+                console.log("scene is now loaded");
+            }
+
+            //Loads all the GUI elements, default is the Main Menu
+            function createGUI() {
+                advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+                layer = new BABYLON.Layer("", "./Slides/tornado.jpeg", scene, true);
+                layer.isEnabled = true;
+                menuPanel = new BABYLON.GUI.StackPanel();
+                settingPanel = new BABYLON.GUI.StackPanel();
+                menuPanel.width = "220px";
+                menuPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+                menuPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+                menuPanel.isVisible = true;
+                advancedTexture.addControl(menuPanel);
+
+                settingPanel = new BABYLON.GUI.StackPanel();
+                settingPanel.width = "220px";
+                settingPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+                settingPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+                settingPanel.isVisible = false;
+                advancedTexture.addControl(settingPanel);
+
+                //Main menu buttons
+                startBut = BABYLON.GUI.Button.CreateSimpleButton("but1", "Start");
+                startBut.width = "150px"
+                startBut.height = "40px";
+                startBut.color = "white";
+                startBut.cornerRadius = 20;
+                startBut.background = "green";
+                startBut.isVisible = true;
+                startBut.onPointerUpObservable.add(function () {
+                    menuFlag = 3;
+                    click.play();
+                    nextMenu();
+                    engine.displayLoadingUI();
+                    loadGame();
+                });
+                menuPanel.addControl(startBut);
+
+                settingBut = BABYLON.GUI.Button.CreateSimpleButton("but2", "Settings");
+                settingBut.width = "150px"
+                settingBut.height = "40px";
+                settingBut.color = "white";
+                settingBut.cornerRadius = 20;
+                settingBut.background = "green";
+                settingBut.isVisible = true;
+                settingBut.onPointerUpObservable.add(function () {
+                    menuFlag = 2;
+                    click.play();
+                    nextMenu();
+                });
+                menuPanel.addControl(settingBut);
+
+                slideBut = BABYLON.GUI.Button.CreateSimpleButton("but3", "Slides");
+                slideBut.width = "150px"
+                slideBut.height = "40px";
+                slideBut.color = "white";
+                slideBut.cornerRadius = 20;
+                slideBut.background = "green";
+                slideBut.isVisible = true;
+                slideBut.onPointerUpObservable.add(function () {
+                    slidePointer = 0;
+                    menuFlag = 1;
+                    click.play();
+                    nextMenu();
+                });
+                menuPanel.addControl(slideBut);
+
+                //settings sliders
+                sfxSlider = new BABYLON.GUI.Slider();
+                sfxSlider.minimum = 0.2;
+                sfxSlider.maximum = 1.2;
+                sfxSlider.step = 0.05;
+                sfxSlider.value = SFXVol;
+                sfxSlider.height = "20px";
+                sfxSlider.width = "200px";
+                sfxSlider.isVisible = true;
+                sfxSlider.onValueChangedObservable.add(function (value) {
+                    SFXVol = value;
+                    updateVolume();
+                    click.play();
+                });
+                settingPanel.addControl(sfxSlider);
+
+                musSlider = new BABYLON.GUI.Slider();
+                musSlider.minimum = 0.2;
+                musSlider.maximum = 1.2;
+                musSlider.step = 0.05;
+                musSlider.value = MasterVol;
+                musSlider.height = "20px";
+                musSlider.width = "200px";
+                musSlider.isVisible = true;
+                musSlider.onValueChangedObservable.add(function (value) {
+                    musicVol = value;
+                    updateVolume();
+                    click.play();
+                });
+                settingPanel.addControl(musSlider);
+
+                masterSlider = new BABYLON.GUI.Slider();
+                masterSlider.minimum = 0.2;
+                masterSlider.maximum = 1.2;
+                masterSlider.step = 0.05;
+                masterSlider.value = MasterVol;
+                masterSlider.height = "20px";
+                masterSlider.width = "200px";
+                masterSlider.isVisible = true;
+                masterSlider.onValueChangedObservable.add(function (value) {
+                    MasterVol = value;
+                    musicVol = MasterVol;
+                    SFXVol = MasterVol;
+                    updateVolume();
+                    click.play();
+                });
+                settingPanel.addControl(masterSlider);
+
+                //slide buttons
+                leftBut = BABYLON.GUI.Button.CreateSimpleButton("but1", "<");
+                leftBut.width = "40px"
+                leftBut.height = "40px";
+                leftBut.color = "white";
+                leftBut.cornerRadius = 20;
+                leftBut.background = "green";
+                leftBut.isVisible = false;
+                leftBut.left = "-300px"
+                leftBut.onPointerUpObservable.add(function () {
+                    if (slidePointer != 0) {
+                        slidePointer--;
+                    }
+                    if (slidePointer == 0) {
+                        layer = new BABYLON.Layer("", "./Slides/Slide1.jpeg", scene, true);
+                    } else if (slidePointer == 1) {
+                        layer = new BABYLON.Layer("", "./Slides/Slide2.jpeg", scene, true);
+                    } else if (slidePointer == 2) {
+                        layer = new BABYLON.Layer("", "./Slides/Slide3.jpg", scene, true);
+                    }
+                    console.log(slidePointer);
+                    click.play();
+                });
+                advancedTexture.addControl(leftBut);
+
+                rightBut = BABYLON.GUI.Button.CreateSimpleButton("but1", ">");
+                rightBut.width = "40px"
+                rightBut.height = "40px";
+                rightBut.color = "white";
+                rightBut.cornerRadius = 20;
+                rightBut.background = "green";
+                rightBut.isVisible = false;
+                rightBut.left = "300px"
+                rightBut.onPointerUpObservable.add(function () {
+                    if (slidePointer != 2) {
+                        slidePointer++;
+                    }
+                    if (slidePointer == 0) {
+                        layer = new BABYLON.Layer("", "./Slides/Slide1.jpeg", scene, true);
+                    } else if (slidePointer == 1) {
+                        layer = new BABYLON.Layer("", "./Slides/Slide2.jpeg", scene, true);
+                    } else if (slidePointer == 2) {
+                        layer = new BABYLON.Layer("", "./Slides/Slide3.jpg", scene, true);
+                    }
+                    console.log(slidePointer);
+                    click.play();
+                });
+                advancedTexture.addControl(rightBut);
+
+                //Exit Button
+                exitBut = BABYLON.GUI.Button.CreateSimpleButton("but1", "X");
+                exitBut.width = "40px"
+                exitBut.height = "40px";
+                exitBut.color = "white";
+                exitBut.cornerRadius = 20;
+                exitBut.background = "green";
+                exitBut.isVisible = false;
+                exitBut.left = "-350px"
+                exitBut.top = "-250px"
+                exitBut.onPointerUpObservable.add(function () {
+                    menuFlag = 0;
+                    click.play();
+                    nextMenu();
+                });
+                advancedTexture.addControl(exitBut);
+            }
+
+            //enables all the main menu GUI elements, disables all else
+            function createMainMenu() {
+                exitBut.isVisible = false;
+                rightBut.isVisible = false;
+                leftBut.isVisible = false;
+                menuPanel.isVisible = true;
+                settingPanel.isVisible = false;
+                if(!enableFlag){
+                    layer.isEnabled = true;
+                    enableFlag = !enableFlag;
+                }
+                layer = new BABYLON.Layer("", "./Slides/tornado.jpeg", scene, true);
+            }
+
+            //enables settings GUI elements, disables all else
+            function createSettings() {
+                exitBut.isVisible = true;
+                rightBut.isVisible = false;
+                leftBut.isVisible = false;
+                menuPanel.isVisible = false;
+                settingPanel.isVisible = true;
+                layer = backlayer;
+            }
+
+            //enables slides GUI elements, disables all else
+            function createSlides() {
+                slidePointer = 0;
+                exitBut.isVisible = true;
+                rightBut.isVisible = true;
+                leftBut.isVisible = true;
+                menuPanel.isVisible = false;
+                settingPanel.isVisible = false;
+                layer = new BABYLON.Layer("", "./Slides/Slide1.jpeg", scene, true);
+            }
+
+            //disables all GUI elements except for the exit button
+            function GameScreen() {
+                exitBut.isVisible = true;
+                rightBut.isVisible = false;
+                leftBut.isVisible = false;
+                menuPanel.isVisible = false;
+                settingPanel.isVisible = false;
+                layer = new BABYLON.Layer("", "./Slides/tornado.jpeg", scene, true);
+                if(enableFlag){
+                    layer.isEnabled = false;
+                    enableFlag = !enableFlag;
+                }
+                
+            }
+
+            //Decides which menu should be showing
+            function nextMenu() {
+                if (menuFlag == 0) {
+                    createMainMenu();
+                } else if (menuFlag == 1) {
+                    createSlides();
+                } else if (menuFlag == 2) {
+                    createSettings();
+                } else if (menuFlag == 3) {
+                    GameScreen();
                 }
             }
 
-            function meshImport(){
-                // Append blender model to scene
-                BABYLON.SceneLoader.ImportMesh("","./", "Tornado.obj", scene, function(newMesh){
-                    tornado = newMesh[0];
+            //Imports all downloaded models, attaches them to a physics object, and gives them shadows
+            function meshImport() {
+                // Append tornado model to scene
+                tornado = new BABYLON.Mesh.CreateBox("box");
+                tornado.material = colliderMat;
+                BABYLON.SceneLoader.ImportMesh("", "./Models/tornado_mesh/", "scene.gltf", scene, function (newMesh) {
+                    newMesh[0].parent = tornado;
                     tornado.position.y = 20;
+                    tornado.position.x = 60;
+                    tornado.scaling = new BABYLON.Vector3(5, 20, 5);
+                    sunShadows.addShadowCaster(tornado, true);
+                    zapShadows.addShadowCaster(tornado, true);
+                    console.log("tornado loaded");
+                    createParticles();
+                    createLightning();
+                    point.position = zapSprite1.position;
+                    wind.attachToMesh(tornado);
+                    zap.attachToMesh(tornado);
+                    rain.attachToMesh(tornado);
                 });
 
-                //buidlings
                 let x;
-                for(let i = 0; i < buidlings.length; i++){
-                    x = getRanNum(1,3);
-                    if(x == 1){
-                        BABYLON.SceneLoader.ImportMesh("","./Models", "Tornado.obj", scene, function(newMesh){
-                            tornado = newMesh[0];
-                            tornado.position.y = 20;
+                let y;
+                createMeshes();
+                //adds buidling meshes
+                for (let i = 0; i < building.length; i++) {
+                    x = getRanNum(0, 3);
+                    //y = Math.floor(getRanNum(0,BuildingCoords.length));
+                    console.log("x = " + x);
+                    //console.log("y = " + y);
+                    if (x <= 1) {
+                        BABYLON.SceneLoader.ImportMesh("", "./Models/house/", "scene.gltf", scene, function (newMesh) {
+                            newMesh[0].parent = building[i];
+                            building[i].position = BuildingCoords[i];
+                            building[i].ellipsoid = new BABYLON.Vector3(1, 1, 1);
+                            //building[i].checkCollisions = true;
+                            building[i].scaling = new BABYLON.Vector3(0.25, 0.25, 0.25);
+                            //building[i].position.y -= 0.1;
+                            building[i].physicsImpostor = new BABYLON.PhysicsImpostor(building[i], BABYLON.PhysicsImpostor.BoxImpostor, { mass: 4, restitution: 0, friction: 1 }, scene);
+                            sunShadows.addShadowCaster(building[i], true);
+                            zapShadows.addShadowCaster(building[i], true);
+                            console.log("Mesh is at: " + building[i].position.x + "," + building[i].position.y + "," + building[i].position.z);
                         });
+                        console.log("house");
+                    } else if (x <= 2 && x > 1) {
+                        BABYLON.SceneLoader.ImportMesh("", "./Models/dae_final_assignment_milestone_house/", "scene.gltf", scene, function (newMesh) {
+                            newMesh[0].parent = building[i];
+                            building[i].position = BuildingCoords[i + 10];
+                            building[i].ellipsoid = new BABYLON.Vector3(1, 1, 1);
+                            //building[i].checkCollisions = true;
+                            building[i].scaling = new BABYLON.Vector3(0.25, 0.25, 0.25);
+                            //building[i].position.y -= 0.1;
+                            building[i].physicsImpostor = new BABYLON.PhysicsImpostor(building[i], BABYLON.PhysicsImpostor.BoxImpostor, { mass: 4.5, restitution: 0, friction: 1 }, scene);
+                            sunShadows.addShadowCaster(building[i], true);
+                            zapShadows.addShadowCaster(building[i], true);
+                            console.log("Mesh is at: " + building[i].position.x + "," + building[i].position.y + "," + building[i].position.z);
+                        });
+                        console.log("japanese house");
+                    } else {
+                        BABYLON.SceneLoader.ImportMesh("", "./Models/surf_cabin/", "scene.gltf", scene, function (newMesh) {
+                            newMesh[0].parent = building[i];
+                            building[i].position = BuildingCoords[i + 15];
+                            building[i].ellipsoid = new BABYLON.Vector3(1, 1, 1);
+                            // building[i].collisionsEnabled = true;
+                            building[i].scaling = new BABYLON.Vector3(0.25, 0.25, 0.25);
+                            //building[i].position.y -= 0.1;
+                            building[i].physicsImpostor = new BABYLON.PhysicsImpostor(building[i], BABYLON.PhysicsImpostor.BoxImpostor, { mass: 3.5, restitution: 0, friction: 1 }, scene);
+                            sunShadows.addShadowCaster(building[i], true);
+                            zapShadows.addShadowCaster(building[i], true);
+                            console.log("Mesh is at: " + building[i].position.x + "," + building[i].position.y + "," + building[i].position.z);
+                        });
+                        console.log("cabin");
                     }
+                    //y = Math.floor(getRanNum(0,BuildingCoords.length));
+                }
+                //adds vehicle meshes
+                for (let i = 0; i < vehicle.length; i++) {
+                    x = getRanNum(0, 2);
+                    //y = Math.floor(getRanNum(0,CarCoords.length));
+                    console.log("x = " + x);
+                    //console.log("y = " + y);
+                    if (x < 1) {
+                        BABYLON.SceneLoader.ImportMesh("", "./Models/2000_jaguar_xj_sport_x308_xj8/", "scene.gltf", scene, function (newMesh) {
+                            newMesh[0].parent = vehicle[i];
+                            vehicle[i].position = CarCoords[i];
+                            vehicle[i].ellipsoid = new BABYLON.Vector3(1, 1, 1);
+                            //vehicle[i].checkCollisions = true;
+                            vehicle[i].scaling = new BABYLON.Vector3(0.75, 0.75, 0.75);
+                            //vehicle[i].position.y -= 0.1;
+                            vehicle[i].physicsImpostor = new BABYLON.PhysicsImpostor(vehicle[i], BABYLON.PhysicsImpostor.BoxImpostor, { mass: 2, restitution: 0, friction: 1 }, scene);
+                            sunShadows.addShadowCaster(vehicle[i], true);
+                            zapShadows.addShadowCaster(vehicle[i], true);
+                            console.log("Mesh is at: " + vehicle[i].position.x + "," + vehicle[i].position.y + "," + vehicle[i].position.z);
+                        });
+                        console.log("jaguar");
+                    } else {
+                        BABYLON.SceneLoader.ImportMesh("", "./Models/mclaren_600lt/", "mclaren_600lt.gltf", scene, function (newMesh) {
+                            newMesh[0].parent = vehicle[i];
+                            vehicle[i].position = CarCoords[i + 7];
+                            vehicle[i].ellipsoid = new BABYLON.Vector3(1, 1, 1);
+                            //vehicle[i].checkCollisions = true;
+                            vehicle[i].scaling = new BABYLON.Vector3(0.75, 0.75, 0.75);
+                            //vehicle[i].position.y -= 0.1;
+                            vehicle[i].physicsImpostor = new BABYLON.PhysicsImpostor(vehicle[i], BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1.75, restitution: 0, friction: 1 }, scene);
+                            sunShadows.addShadowCaster(vehicle[i], true);
+                            zapShadows.addShadowCaster(vehicle[i], true);
+                            console.log("Mesh is at: " + vehicle[i].position.x + "," + vehicle[i].position.y + "," + vehicle[i].position.z);
+                        });
+                        console.log("mclaren");
+                    }
+
+                }
+                //adds tree meshes (currently bugged)
+                for (let i = 0; i < trees.length; i++) {
+                    BABYLON.SceneLoader.ImportMesh("", "./Models/trees_and_foliage/", "scene.gltf", scene, function (newMesh) {
+                        newMesh[0].parent = trees[i];
+                        trees[i].ellipsoid = new BABYLON.Vector3(1, 1, 1);
+                        //trees[i].checkCollisions = true;
+                        trees[i].position = TreeCoords[i];
+                        trees[i].position.y += 0.1;
+                        trees[i].scaling = new BABYLON.Vector3(0.0015, 0.0015, 0.0015);
+                        trees[i].physicsImpostor = new BABYLON.PhysicsImpostor(trees[i], BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1.25, restitution: 0, friction: 1 }, scene);
+                        sunShadows.addShadowCaster(trees[i], true);
+                        zapShadows.addShadowCaster(trees[i], true);
+                        console.log("Mesh is at: " + trees[i].position.x + "," + trees[i].position.y + "," + trees[i].position.z);
+                        if (i == trees.length - 1) {
+                            engine.hideLoadingUI();
+                        }
+                    });
                 }
             }
-            
-            function placeHolderMesh(){
-                var square = BABYLON.MeshBuilder.CreateBox("box",{}, scene);
+
+            //used for debugging. Not needed
+            function placeHolderMesh() {
+                var square = BABYLON.MeshBuilder.CreateBox("box", {}, scene);
                 square.position = new BABYLON.Vector3(0, 2, 0);
             }
 
-            function getGroundPosition(){
-                var pickinfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) { return mesh == ground; });
+            //gets the point that is clicked on the ground mesh
+            function getGroundPosition() {
+                var pickinfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) { return mesh == ground });
                 if (pickinfo.hit) {
+                    pointSFX.play();
                     return pickinfo.pickedPoint;
                 }
 
                 return null;
             }
-            function pointerDown(mesh){
+
+            //function that runs on pointer down event
+            function pointerDown(mesh) {
                 currentMesh = mesh;
                 startingPoint = getGroundPosition();
-                if (startingPoint) { // we need to disconnect camera from canvas
-                    setTimeout(function () {
-                        camera.detachControl(canvas);
-                    }, 0);
+                if (startingPoint != null) {
+                    //makes an invisible box where the point is and pushes the position of the box to the array
+                    linePoints.push(BABYLON.MeshBuilder.CreateBox("box", scene));
+                    linePoints[linePoints.length - 1].position = startingPoint;
+                    linePoints[linePoints.length - 1].material = colliderMat;
+                    if (linePoints.length == 2) {
+                        //goes when there are two points selected
+                        pointFlag = true;
+                        background.stop();
+                        enableVortex();
+
+                    } else if (linePoints.length > 2) {
+                        //clears the point array
+                        linePoints[0] = linePoints[linePoints.length - 1];
+                        linePoints.length = 1;
+                    }
+                    console.log(startingPoint);
+                    console.log(pointFlag);
+                    console.log(linePoints.length);
+
                 }
             }
 
-            function pointerUp(mesh) {
-                    if (startingPoint) {
-                    camera.attachControl(canvas, true);
-                    startingPoint = null;
-                    getCoordinates(mesh);
-                    return;
+            //creates invisible box meshes that are used as collider objects for the imported models
+            function createMeshes() {
+                for (let i = 0; i < MaxMeshes; i++) {
+                    building.push(new BABYLON.Mesh.CreateBox("box"));
+                    building[i].material = colliderMat;
+                    //building[i].scaling = new BABYLON.Vector3(5,5,5);
+                    //building[i].collisionsEnabled = true;
+
+                }
+                for (let i = 0; i < MaxMeshes; i++) {
+                    vehicle.push(new BABYLON.Mesh.CreateBox("box"));
+                    vehicle[i].material = colliderMat;
+                    //vehicle[i].scaling = new BABYLON.Vector3(5,5,5);
+                    //vehicle[i].collisionsEnabled = true;
+                }
+                for (let i = 0; i < MaxMeshes; i++) {
+                    trees.push(new BABYLON.Mesh.CreateBox("box"));
+                    trees[i].material = colliderMat;
+                    //trees[i].scaling = new BABYLON.Vector3(5, 5, 5);
+                    //trees[i].collisionsEnabled = true;
+
                 }
             }
 
-            function pointerMove() {
-                if (!startingPoint) {
-                    return;
-                }
-                var current = getGroundPosition();
-                if (!current) {
-                    return;
-                }
-
-                var diff = current.subtract(startingPoint);
-                currentMesh.position.addInPlace(diff);
-
-                startingPoint = current;
-
+            //calculates teh line between the two selected points
+            function lineCalc() {
+                slope = (linePoints[1].position.z - linePoints[0].position.z) / (linePoints[1].position.x - linePoints[0].position.x);
+                let b = (slope * (0 - linePoints[0].position.x)) + linePoints[0].position.z;
+                //console.log(linePoints[0]);
+                //console.log(linePoints[1]);
+                //console.log("Slope is " + slope);
+                return ((slope * tornado.position.x) + b);
             }
 
-            function getCoordinates(mesh){
-                console.log(mesh.position.x);
-                console.log(mesh.position.y);
-                console.log(mesh.position.z);
+            //runs the tornado animation, plays sprite animation, and plays thunder sound
+            function vortexMove() {
+                const startFrame = 0;
+                const endFrame = 250;
+                const frameRate = 10;
+
+                const xSlide = new BABYLON.Animation("xSlide", "position.x", frameRate, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+                const keyFrames = [];
+
+                keyFrames.push({
+                    frame: startFrame,
+                    value: 55
+                });
+
+                keyFrames.push({
+                    frame: endFrame,
+                    value: -55
+                });
+
+
+                xSlide.setKeys(keyFrames);
+
+                tornado.animations.push(xSlide);
+                scene.registerBeforeRender(function () {
+                    tornado.addRotation(0, 0.15, 0);
+                    if (pointFlag) {
+                        if (directional.intensity > 0.6) {
+                            directional.intensity -= 0.05;
+                        }
+                        tornado.position.z = lineCalc();
+                        rainBox2.position.z = tornado.position.z - 7;
+                        rainBox1.position.z = tornado.position.z + 7;
+                        rainBox1.position.x = tornado.position.x;
+                        rainBox2.position.x = tornado.position.x;
+                        zapSprite1.position.z = tornado.position.z + 10;
+                        zapSprite1.position.x = tornado.position.x + 10;
+                        zapSprite2.position.z = tornado.position.z - 10;
+                        zapSprite2.position.x = tornado.position.x - 10;
+                        if (Math.floor(tornado.position.x) == Math.floor(linePoints[0].position.x)) {
+                            zapSprite1.isVisible = true;
+                            zapSprite1.playAnimation(0, 4, false, 1500);
+                            point.setEnabled(true);
+                            console.log("point light is on");
+                            console.log("Sprite 1 activated");
+                            zap.play();
+                            //zapSprite1.isVisible = false;
+                        } else if (Math.floor(tornado.position.x) == Math.floor(linePoints[1].position.x)) {
+                            zapSprite2.isVisible = true;
+                            zapSprite2.playAnimation(0, 4, false, 1500);
+                            point.setEnabled(true);
+                            console.log("point light is on");
+                            console.log("Sprite 2 activated");
+                            zap.play();
+                            //zapSprite2.isVisible = false;
+                        } else {
+                            point.setEnabled(false);
+                        }
+
+                        createTornado();
+                        vortex.enable();
+                        //console.log(tornado.position);
+                        //console.log(rainBox1.position);
+                        //vortex.disable();
+
+                    }
+                    //vortex.dispose();
+                });
+                scene.beginAnimation(tornado, endFrame, startFrame, false);
             }
 
-             function createMeshes(){
-                for(let i = 0; i < BuildingCoords.length; i++){
-                    building.push(new BABYLON.Mesh());
-                    building[i].position = BuildingCoords[i];
-                    building[i].position.y += 1;
-                    sunShadows.getShadowMap().renderList.push(building[i]);
-                    zapShadows.getShadowMap().renderList.push(building[i]);
-                }
-                for(let i = 0; i < CarCoords.length; i++){
-                    vehicle.push(new BABYLON.Mesh());
-                    vehicle[i].position = CarCoords[i];
-                    vehicle[i].position.y += 1;
-                    sunShadows.getShadowMap().renderList.push(vehicle[i]);
-                    zapShadows.getShadowMap().renderList.push(vehicle[i]);
-                }
-                for(let i = 0; i < TreeCoords.length; i++){
-                    trees.push(new BABYLON.Mesh());
-                    trees[i].position = TreeCoords[i];
-                    trees[i].position.y += 1;
-                    sunShadows.getShadowMap().renderList.push(trees[i]);
-                    zapShadows.getShadowMap().renderList.push(trees[i]);
+            //Loads sounds
+            function soundFX() {
+                SFXVol = 1;
+                musicVol = 1;
+                MasterVol = 1;
+                background = new BABYLON.Sound("Music", "./Audio/background.mp3", scene, function () { console.log("Background music ready") }, {
+                    loop: true,
+                    autoplay: true,
+                    volume: musicVol
+                });
+
+                siren = new BABYLON.Sound("Siren", "./Audio/Tornado-siren.mp3", scene, function () { console.log("Siren ready") }, {
+                    loop: true,
+                    autoplay: false,
+                    volume: SFXVol - 0.2
+                });
+
+                wind = new BABYLON.Sound("Wind", "./Audio/wind.wav", scene, function () { console.log("Wind ready") }, {
+                    loop: true,
+                    autoplay: false,
+                    volume: SFXVol
+                });
+
+                rain = new BABYLON.Sound("Rain", "./Audio/rain.wav", scene, function () { console.log("Rain ready") }, {
+                    loop: true,
+                    autoplay: false,
+                    volume: SFXVol
+                });
+
+                zap = new BABYLON.Sound("Thunder", "./Audio/thunder.wav", scene, function () { console.log("Thunder ready") }, {
+                    loop: false,
+                    autoplay: false,
+                    volume: SFXVol
+                });
+
+                click = new BABYLON.Sound("Menu", "./Audio/Menu.mp3", scene, function () { console.log("Click ready") }, {
+                    loop: false,
+                    autoplay: false,
+                    volume: SFXVol
+                });
+
+                pointSFX = new BABYLON.Sound("Menu", "./Audio/point.mp3", scene, function () { console.log("Point ready") }, {
+                    loop: false,
+                    autoplay: false,
+                    volume: SFXVol
+                });
+            }
+
+            //fades out sound effects at the end of tornado life
+            function fadeOutSFX() {
+                var temp = SFXVol;
+                for (let i = SFXVol; i > 0; i -= 0.1) {
+                    SFXVol = Math.floor(i * 10) / 10;
+                    if (SFXVol > 0) {
+                        rain.setVolume(SFXVol + 0.1);
+                        wind.setVolume(SFXVol + 0.1);
+                        siren.setVolume(SFXVol);
+                        console.log(SFXVol);
+                    } else {
+                        SFXVol = temp;
+                        rain.stop();
+                        wind.stop();
+                        siren.stop();
+                        rain.setVolume(SFXVol);
+                        wind.setVolume(SFXVol);
+                        siren.setVolume(SFXVol - 0.2);
+                        console.log(SFXVol);
+                    }
                 }
             }
+
+            //updates volumes based on the volume sliders
+            function updateVolume() {
+                rain.setVolume(SFXVol);
+                wind.setVolume(SFXVol);
+                siren.setVolume(SFXVol - 0.2);
+                click.setVolume(SFXVol);
+                pointSFX.setVolume(SFXVol);
+                background.setVolume(musicVol);
+            }
+
+            //creates tornado physics event
+            function createTornado() {
+                let vortexPos = new BABYLON.Vector3(tornado.position.x, 0, tornado.position.z);
+                vortex = physicsHelper.vortex(
+                    vortexPos,
+                    {
+                        radius: 15,
+                        strength: 20,
+                        height: tornado.position.y,
+                    }
+                );
+                var vortexData = vortex.getData();
+                var cylinder = vortexData.cylinder;
+                addMaterialToMesh(cylinder);
+                cylinder.isVisible = false;
+            }
+
+            //enables the tornado, sound effects, and particles when two points are selected
+            function enableVortex() {
+                console.log("vortex enabled");
+                tornado.position.x = 55;
+
+                if (pointFlag) {
+                    tornado.position.z = lineCalc();
+                    console.log("tornado z postion set:" + tornado.position.z);
+                    rainParticle1.start();
+                    rainParticle2.start();
+                    console.log("particles started");
+                    siren.play();
+                    rain.play();
+                    wind.play();
+                    
+                    vortexMove();
+                    setTimeout(function (vortex) {
+                        console.log("tornado disabled");
+                        scene.stopAnimation(tornado);
+                        linePoints[0].position = new BABYLON.Vector3(0, 0, 0);
+                        linePoints[1].position = new BABYLON.Vector3(0, 0, 0);
+                        console.log("line reset");
+                        tornado.position.x = 60;
+                        rainParticle1.stop();
+                        rainParticle2.stop();
+                        directional.intensity = 1;
+                        fadeOutSFX();
+                        background.play();
+                        pointFlag = false;
+                        console.log("particles stopped");
+                        return;
+                    }, 22000, vortex);
+                    console.log(pointFlag);
+                }
+            }
+
+            //loads game elements
+            function loadGame() {
+                materials();
+                createShadows();
+                physicsEnabler();
+                createGround();
+                createSkyBox();
+                BABYLON.Tools.DelayAsync(15000).then(() => {
+                    meshImport();
+                })
+            }
+
 
             sceneSetup();
-            materials();
-            createShadows();
-            createGround();
-            //createMeshes();
-            setTimeout(() => {createMeshes();}, 3000);
-            createSkyBox();
-            physicsEnabler();
-           // meshImport();
-           scene.onPointerObservable.add((pointerInfo) => {      		
+            soundFX();
+            createGUI();
+
+            scene.onPointerObservable.add((pointerInfo) => {
                 switch (pointerInfo.type) {
                     case BABYLON.PointerEventTypes.POINTERDOWN:
-                        if(pointerInfo.pickInfo.hit && (pointerInfo.pickInfo.pickedMesh != ground)) {
+                        if (pointFlag == false) {
                             pointerDown(pointerInfo.pickInfo.pickedMesh);
-                                
                         }
                         break;
                     case BABYLON.PointerEventTypes.POINTERUP:
-                            pointerUp(pointerInfo.pickInfo.pickedMesh);
                         break;
-                    case BABYLON.PointerEventTypes.POINTERMOVE:          
-                            pointerMove();
+                    case BABYLON.PointerEventTypes.POINTERMOVE:
                         break;
 
                 }
             });
-            
+
             return scene;
         };
 
